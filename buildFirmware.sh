@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Do not report or package artifacts after a failed build step.
+set -e
+
 
 
 echo "Build process started"

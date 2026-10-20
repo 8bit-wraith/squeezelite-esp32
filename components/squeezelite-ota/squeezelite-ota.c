@@ -13,6 +13,7 @@
 #include "esp_event.h"
 #include "esp_log.h"
 #include "esp_https_ota.h"
+#include "esp_crt_bundle.h"
 #include "string.h"
 #include <stdbool.h>
 #include "nvs.h"
@@ -354,6 +355,7 @@ esp_err_t init_config(ota_thread_parms_t * p_ota_thread_parms){
 		http_client_config.event_handler = _http_event_handler;
 		http_client_config.disable_auto_redirect=false;
 		http_client_config.skip_cert_common_name_check = false;
+		http_client_config.crt_bundle_attach = esp_crt_bundle_attach;
 		http_client_config.url = strdup_psram(p_ota_thread_parms->url);
 		http_client_config.max_redirection_count = 4;
 		// buffer size below is for http read chunks

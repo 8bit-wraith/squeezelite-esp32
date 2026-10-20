@@ -16,6 +16,7 @@
 #include "esp_task.h"
 #include "esp_tls.h"
 #include "esp_http_client.h"
+#include "esp_crt_bundle.h"
 #include "esp_heap_caps.h"
 #include "esp_log.h"
 #include "tools.h"
@@ -251,6 +252,7 @@ void http_download(char *url, size_t max, http_download_cb_t callback, void *con
 
 	esp_http_client_config_t config = {
 		.url = url,
+		.crt_bundle_attach = esp_crt_bundle_attach,
 		.event_handler = http_event_handler,
 		.user_data = http_context,
 	};

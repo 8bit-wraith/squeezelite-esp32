@@ -8,7 +8,7 @@ import unittest
 SCRIPT = Path(__file__).resolve().parents[1] / 'buildFirmware.sh'
 
 class BuildFailureTests(unittest.TestCase):
-    def run_build(self, fail=False, configuration=True):
+    def run_build(self, fail=False, configuration=True, report_fail=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             for name in ('bin', 'build', 'build-scripts'):
@@ -18,6 +18,7 @@ class BuildFailureTests(unittest.TestCase):
             compiler = root / 'bin/idf.py'
             compiler.write_text('#!/bin/sh\necho "$1" >> "$TEST_LOG"\n'
                                 + ('if [ "$1" = build ]; then exit 7; fi\n' if fail else '')
+                                + ('if [ "$1" = size-components ]; then exit 8; fi\n' if report_fail else '')
                                 + 'exit 0\n')
             compiler.chmod(0o700)
             archiver = root / 'bin/zip'
@@ -36,7 +37,10 @@ class BuildFailureTests(unittest.TestCase):
         self.assertEqual(self.run_build(fail=True), (7, ['build']))
 
     def test_success_runs_reports(self):
-        self.assertEqual(self.run_build(), (0, ['build', 'size-components', 'size-components-squeezelite', 'zip', 'zip']))
+        self.assertEqual(self.run_build(), (0, ['build', 'size-components', 'zip', 'zip']))
+
+    def test_failed_report_stops_packaging(self):
+        self.assertEqual(self.run_build(report_fail=True), (8, ['build', 'size-components']))
 
     def test_missing_configuration_stops_before_compiler(self):
         code, calls = self.run_build(configuration=False)

@@ -39,14 +39,7 @@ jobs:
       with:
         fetch-depth: 15
         submodules: true
-    - name: Cache build
-      id: cache-build
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/build 
-          ./
-        key: ${{ runner.os }}-${{ matrix.node }}
+    # Each matrix job needs a clean checkout; caching ./ restores generated sources and Git metadata.
     - name: Set build parameters
       run: |
         git update-index --chmod=+x ./server_certs/getcert.sh

@@ -1,0 +1,4 @@
+# Compatible with the ESP-IDF image's Python 3.8 and nanopb generator.
+protobuf==4.25.8
+grpcio==1.62.3
+grpcio-tools==1.62.3

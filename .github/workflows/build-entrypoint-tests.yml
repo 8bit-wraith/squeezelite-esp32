@@ -1,0 +1,25 @@
+name: Build entrypoint regression tests
+
+on:
+  pull_request:
+    paths:
+      - buildFirmware.sh
+      - tests/build-failure.py
+      - .github/workflows/build-entrypoint-tests.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shell-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check shell syntax
+        run: bash -n buildFirmware.sh
+      - name: Exercise synthetic build failures and packaging
+        run: python3 tests/build-failure.py

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Do not report or package artifacts after a failed build step.
+set -e
+
 
 
 echo "Build process started"
@@ -36,7 +39,6 @@ echo "Building project"
 idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH} 
 echo "Generating size report"
 idf.py size-components >build/size_components.txt
-idf.py size-components-squeezelite build/size_components_squeezelite.txt
 if [ -z "${artifact_file_name}" ]
 then
     echo "No artifact file name set.  Will not generate zip file."
